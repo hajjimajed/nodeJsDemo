@@ -1,0 +1,12 @@
+{
+  "name": "nodeJsDemo",
+  "version": "1.0.0",
+  "description": "node js demo",
+  "main": "app.js",
+  "repository": "https://github.com/hajjimajed/nodeJsDemo.git",
+  "author": "hajjimajed <hajjimajed78@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
