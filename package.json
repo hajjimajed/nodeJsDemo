@@ -7,6 +7,10 @@
   "author": "hajjimajed <hajjimajed78@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
