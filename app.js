@@ -5,13 +5,26 @@ const path = require('path');
 
 const app = express();
 
+
+const db = require('./utils/database');
+
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-
 const notFoundController = require('./controllers/error');
+
+
+// db.execute('SELECT * FROM products')
+//     .then(result => {
+//         console.log(result[0]);
+//     })
+//     .catch(err => {
+//         console.log(err);
+//     });
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
