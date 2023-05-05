@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 
 
-const db = require('./utils/database');
+const sequelize = require('./utils/database');
 
 
 app.set('view engine', 'ejs');
@@ -45,6 +45,14 @@ app.use(notFoundController.notFound)
 
 
 
+sequelize.sync()
+    .then(result => {
+        // console.log(result);
+        app.listen(8000);
+    })
+    .catch(err => console.log(err))
+
+
+
 // const server = http.createServer(app);
 
-app.listen(8000);
