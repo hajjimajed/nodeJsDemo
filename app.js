@@ -13,13 +13,13 @@ const app = express();
 // const OrderItem = require('./models/order-item');
 
 
-const mongoConnect = require('./utils/database');
+const mongoConnect = require('./utils/database').mongoConnect;
 
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// const adminRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 // const shopRoutes = require('./routes/shop');
 
 const notFoundController = require('./controllers/error');
@@ -38,19 +38,19 @@ app.use((req, res, next) => {
     //         next();
     //     })
     //     .catch(err => console.log(err))
+    next();
 })
 
 
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use(shopRoutes);
 
 app.use(notFoundController.notFound)
 
 
 
-mongoConnect((client) => {
-    console.log(client);
+mongoConnect(() => {
     app.listen(8000);
 })
 
