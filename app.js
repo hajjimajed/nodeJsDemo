@@ -14,6 +14,7 @@ const app = express();
 
 
 const mongoConnect = require('./utils/database').mongoConnect;
+const User = require('./models/user');
 
 
 app.set('view engine', 'ejs');
@@ -32,13 +33,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-    // User.findByPk(1)
-    //     .then(user => {
-    //         req.user = user;
-    //         next();
-    //     })
-    //     .catch(err => console.log(err))
-    next();
+    User.findById('6458c00c69b35fa2301c18e8')
+        .then(user => {
+            req.user = new User(
+                user.name,
+                user.email,
+                user.cart,
+                user._id
+            );
+            next();
+        })
+        .catch(err => console.log(err))
 })
 
 
