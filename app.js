@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 
+const mongoose = require('mongoose');
+
 // using sql database : mysql2
 // const sequelize = require('./utils/database');
 // const Product = require('./models/product');
@@ -13,8 +15,7 @@ const app = express();
 // const OrderItem = require('./models/order-item');
 
 
-const mongoConnect = require('./utils/database').mongoConnect;
-const User = require('./models/user');
+// const User = require('./models/user');
 
 
 app.set('view engine', 'ejs');
@@ -32,19 +33,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-    User.findById('6458c00c69b35fa2301c18e8')
-        .then(user => {
-            req.user = new User(
-                user.name,
-                user.email,
-                user.cart,
-                user._id
-            );
-            next();
-        })
-        .catch(err => console.log(err))
-})
+// app.use((req, res, next) => {
+//     User.findById('6458c00c69b35fa2301c18e8')
+//         .then(user => {
+//             req.user = new User(
+//                 user.name,
+//                 user.email,
+//                 user.cart,
+//                 user._id
+//             );
+//             next();
+//         })
+//         .catch(err => console.log(err))
+// })
 
 
 
@@ -55,12 +56,12 @@ app.use(notFoundController.notFound)
 
 
 
-mongoConnect(() => {
-    app.listen(8000);
-})
-
-
-
+mongoose
+    .connect('mongodb+srv://hajjimajed78:rHh6z3McFzWLIPbK@cluster0.xh4x4zf.mongodb.net/shop?retryWrites=true&w=majority')
+    .then(result => {
+        app.listen(8000);
+    })
+    .catch(err => console.log(err))
 
 
 
