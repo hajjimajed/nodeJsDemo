@@ -29,6 +29,7 @@
                                 <div class="card__actions">
                                     <a class="btn" href="/admin/edit-product/<%= product._id %>?edit=true">Edit</a>
                                     <form action="/admin/delete-product" method="POST">
+                                        <input type="hidden" value="<%= csrfToken %>" name="_csrf" id="">
                                         <input type="hidden" value="<%= product._id %>" name="productId" id="">
                                         <button class="btn" type="submit">Delete</button>
                                     </form>
