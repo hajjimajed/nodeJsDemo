@@ -4,6 +4,5 @@ exports.notFound = (req, res, next) => {
             'not-found', {
             pageTitle: 'Page Not Found',
             path: '/404',
-            isAuthenticated: req.isLoggedIn
         });
 }
