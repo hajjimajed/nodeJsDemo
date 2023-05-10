@@ -7,11 +7,13 @@ const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const User = require('../models/user');
 
+const apiKey = require('../api/sendgrid');
+
 
 const transporter = nodemailer.createTransport(
     sendgridTransport({
         auth: {
-            api_key: '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'
+            api_key: apiKey
         }
     })
 );
@@ -100,7 +102,7 @@ exports.postSignup = (req, res, next) => {
                     res.redirect('/login');
                     return transporter.sendMail({
                         to: email,
-                        from: 'hajjimajed78@gmail.com',
+                        from: 'majeddd123@gmail.com',
                         subject: 'Signup succeeded!',
                         html: '<h1>You successfully signed up!</h1>'
                     });
@@ -157,7 +159,7 @@ exports.postReset = (req, res, next) => {
                 res.redirect('/');
                 transporter.sendMail({
                     to: req.body.email,
-                    from: 'hajjimajed78@gmail.com',
+                    from: 'majeddd123@gmail.com',
                     subject: 'password reset',
                     html: `
                 <p>You requested a password reset</p>
@@ -171,7 +173,7 @@ exports.postReset = (req, res, next) => {
 
 
 exports.getNewPassword = (req, res, next) => {
-    const token = request.params.token;
+    const token = req.params.token;
     User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         .then(user => {
             let message = req.flash('error');
@@ -188,9 +190,10 @@ exports.getNewPassword = (req, res, next) => {
                 passwordToken: token
             });
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err);
+        });
 };
-
 
 exports.postNewPassword = (req, res, next) => {
     const newPassword = req.body.password;
@@ -205,7 +208,7 @@ exports.postNewPassword = (req, res, next) => {
     })
         .then(user => {
             resetUser = user;
-            return bcrypt.hash(newPassword, 12)
+            return bcrypt.hash(newPassword, 12);
         })
         .then(hashedPassword => {
             resetUser.password = hashedPassword;
@@ -216,5 +219,7 @@ exports.postNewPassword = (req, res, next) => {
         .then(result => {
             res.redirect('/login');
         })
-        .catch(err => console.log(err))
-}
+        .catch(err => {
+            console.log(err);
+        });
+};
