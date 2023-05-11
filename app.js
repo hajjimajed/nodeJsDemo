@@ -1,19 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const app = express();
-
-const MONGODB_URI = 'mongodb+srv://hajjimajed78:rHh6z3McFzWLIPbK@cluster0.xh4x4zf.mongodb.net/shop?retryWrites=true&w=majority';
-
+const csrf = require('csurf');
+const flash = require('connect-flash');
 const mongoose = require('mongoose');
-
 const session = require('express-session')
 const MongoDbStore = require('connect-mongodb-session')(session);
 
-const csrf = require('csurf');
+const multer = require('multer');
 
-const flash = require('connect-flash');
+const User = require('./models/user');
+const notFoundController = require('./controllers/error');
 
+const MONGODB_URI = 'mongodb+srv://hajjimajed78:rHh6z3McFzWLIPbK@cluster0.xh4x4zf.mongodb.net/shop?retryWrites=true&w=majority';
+
+const app = express();
 const store = new MongoDbStore({
     uri: MONGODB_URI,
     collection: 'sessions'
@@ -21,7 +22,25 @@ const store = new MongoDbStore({
 
 const csrfProtection = csrf();
 
-const User = require('./models/user');
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname + '-' + file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if (
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
 
 
 app.set('view engine', 'ejs');
@@ -31,15 +50,15 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
-const notFoundController = require('./controllers/error');
-
-
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+    multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+);
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(
     session({
         secret: 'my secret',
@@ -50,7 +69,6 @@ app.use(
 );
 
 app.use(csrfProtection);
-
 app.use(flash())
 
 app.use((req, res, next) => {
